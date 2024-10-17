@@ -4,8 +4,7 @@ English
 - [Overview](#overview)
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
-- [Native Bridge Support](#native-bridge-support)
-- [GMS Support](#gms-support)
+- [GMS Support](#gms-services-support)
 - [WebRTC Streaming](#webrtc-streaming)
 - [Troubleshooting](#troubleshooting)
 
