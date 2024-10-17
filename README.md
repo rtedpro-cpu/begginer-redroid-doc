@@ -4,8 +4,8 @@ English
 - [Overview](#overview)
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
-- [GMS Support](#gms-services-support)
-- [WebRTC Streaming](#webrtc-streaming)
+- [Google Services Support](#gms)
+- [WebRTC Streaming](#webstream)
 - [Troubleshooting](#troubleshooting)
 
 ## Overview
@@ -88,12 +88,12 @@ It's possible to run `arm` Apps in `x86` *redroid* instance via `libhoudini`, `l
 Check [@zhouziyang/libndk_translation](https://github.com/zhouziyang/libndk_translation) for prebuilt `libndk_translation`.
 Published `redroid` images already got `libndk_translation` included.
 
-## Google Services Support
+## gms
 
 It's possible to add Google Services support in *redroid* via [Redroid Script](https://github.com/abing7k/redroid-script).
 
 
-## Web Streaming
+## webstream
 ```bash
 docker run --rm -itd --privileged --name web -p 8000:8000/tcp emptysuns/scrcpy-web:v0.1
 docker exec -it web adb connect 172.17.0.1:5555
