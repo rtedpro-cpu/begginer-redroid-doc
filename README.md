@@ -1,4 +1,4 @@
-English | [简体中文](README.zh-cn.md)
+English
 
 # Table of contents
 - [Overview](#overview)
@@ -7,10 +7,7 @@ English | [简体中文](README.zh-cn.md)
 - [Native Bridge Support](#native-bridge-support)
 - [GMS Support](#gms-support)
 - [WebRTC Streaming](#webrtc-streaming)
-- [How To Build](#how-to-build)
 - [Troubleshooting](#troubleshooting)
-- [Contact Me](#contact-me)
-- [License](#license)
 
 ## Overview
 *redroid* (*Re*mote an*Droid*) is a GPU accelerated AIC (Android In Cloud) solution. You can boot many
@@ -37,42 +34,19 @@ Currently supported:
 ## Getting Started
 *redroid* should be able to run on any linux distribution (with some kernel features enabled).
 
-Quick start on *Ubuntu 20.04* here; Check [deploy section](deploy/README.md) for other distros.
+Quick start on *Ubuntu 20.04* deploy of **Redroid**
 
 ```bash
-## install docker https://docs.docker.com/engine/install/#server
-
-## install required kernel modules
 apt install linux-modules-extra-`uname -r`
 modprobe binder_linux devices="binder,hwbinder,vndbinder"
 modprobe ashmem_linux
-
-
 ## running redroid
 docker run -itd --rm --privileged \
     --pull always \
     -v ~/data:/data \
     -p 5555:5555 \
-    redroid/redroid:12.0.0_64only-latest
-
-### Explanation:
-###   --pull always    -- use latest image
-###   -v ~/data:/data  -- mount data partition
-###   -p 5555:5555     -- expose adb port
-
-### DISCLAIMER
-### Should NOT expose adb port on public network
-### otherwise, redroid container (even host OS) may get compromised
-
-## install adb https://developer.android.com/studio#downloads
-adb connect localhost:5555
-### NOTE: change localhost to IP if running redroid remotely
-
-## view redroid screen
-## install scrcpy https://github.com/Genymobile/scrcpy/blob/master/README.md#get-the-app
-scrcpy -s localhost:5555
-### NOTE: change localhost to IP if running redroid remotely
-###     typically running scrcpy on your local PC
+    redroid/redroid:13.0.0-latest
+## can limit storage if needed
 ```
 
 ## Configuration
@@ -115,77 +89,17 @@ It's possible to run `arm` Apps in `x86` *redroid* instance via `libhoudini`, `l
 Check [@zhouziyang/libndk_translation](https://github.com/zhouziyang/libndk_translation) for prebuilt `libndk_translation`.
 Published `redroid` images already got `libndk_translation` included.
 
-``` bash
-# example structure, be careful the file owner and mode
+## Google Services Support
 
-system/
-├── bin
-│   ├── arm
-│   └── arm64
-├── etc
-│   ├── binfmt_misc
-│   └── init
-├── lib
-│   ├── arm
-│   └── libnb.so
-└── lib64
-    ├── arm64
-    └── libnb.so
-```
+It's possible to add Google Services support in *redroid* via [Redroid Script](https://github.com/abing7k/redroid-script).
 
-```dockerfile
-# Dockerfile
-FROM redroid/redroid:11.0.0-latest
 
-ADD native-bridge.tar /
-```
-
+## Web Streaming
 ```bash
-# build docker image
-docker build . -t redroid:11.0.0-nb
-
-# running
-docker run -itd --rm --privileged \
-    -v ~/data11-nb:/data \
-    -p 5555:5555 \
-    redroid:11.0.0-nb \
+docker run --rm -itd --privileged --name web -p 8000:8000/tcp emptysuns/scrcpy-web:v0.1
+docker exec -it web adb connect 172.17.0.1:5555
+# Change 5555 to the port of container
 ```
-
-## GMS Support
-
-It's possible to add GMS (Google Mobile Service) support in *redroid* via [Open GApps](https://opengapps.org/), [MicroG](https://microg.org/) or [MindTheGapps](https://gitlab.com/MindTheGapps/vendor_gapps).
-
-Check [android-builder-docker](./android-builder-docker) for details.
-
-
-## WebRTC Streaming
-Plan to port `WebRTC` solutions from `cuttlefish`, including frontend (HTML5), backend and many virtual HALs.
-
-## How To Build
-It's the same way as AOSP building process, but I suggest to use `docker` to build it.
-
-Check [android-builder-docker](./android-builder-docker) for details.
 
 ## Troubleshooting
-- How to collect debug blobs
-> `curl -fsSL https://raw.githubusercontent.com/remote-android/redroid-doc/master/debug.sh | sudo bash -s -- [CONTAINER]`
->
-> omit *CONTAINER* if not exist any more
-
-- Container disappeared immediately
-> make sure the required kernel modules are installed; run `dmesg -T` for detailed logs
-
-- Container running, but adb cannot connect (device offline etc.)
-> run `docker exec -it <container> sh`, then check `ps -A` and `logcat`
->
-> try `dmesg -T` if cannot get a container shell
-
-## Contact Me
-- remote-android.slack.com (invite link: https://join.slack.com/t/remote-android/shared_invite/zt-q40byk2o-YHUgWXmNIUC1nweQj0L9gA)
-- ziyang.zhou@outlook.com
-
-## License
-*redroid* itself is under [Apache License](https://www.apache.org/licenses/LICENSE-2.0), since *redroid* includes 
-many 3rd party modules, you may need to examine license carefully.
-
-*redroid* kernel modules are under [GPL v2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+- Checkout original redroid repo
